@@ -71,7 +71,6 @@ for i in range(n_trucks):
     Y.append(Y2)
     plt.plot(X2,Y2)
     
-    
 
 for i, txt in enumerate(n):
     print(txt)
