@@ -13,18 +13,18 @@ n_trucks = 4
 truck_capacity = 25
 
 nb_pop = 500
-nb_generations = 2000
+nb_generations = 5000
 
 #Garder les 20 meilleurs individus
 elitism = True
 best_pop = 20
 
-mutation_rate =0.7
+mutation_rate =0.5
 
 top_gen = []
 
 time_penalty = 100
-quantity_penalty = 100
+quantity_penalty = 200
 
 
 ###############################################################################

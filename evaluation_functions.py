@@ -27,7 +27,7 @@ def track_evaluation(truck_track):
                     t+=t2
                     t+=+max(0,clients[track[i]][1]-t)  #ajout d'un temps d'attente si le livreur arrive avant le début de la fenêtre
                 else :
-                    t3+=time_penalty #ajout d'une pénalité si une fenêtre n'est pas respectée
+                    t3+= (t+t2 - clients[track[i]][2])*time_penalty #ajout d'une pénalité si une fenêtre n'est pas respectée
                     t+=t2
                     
                     
@@ -36,7 +36,7 @@ def track_evaluation(truck_track):
                 if q >= clients[track[i]][0]:
                     q-=clients[track[i]][0]
                 else : 
-                    t3+=quantity_penalty   #ajout d'une pénalité si une quantité n'est pas respectée
+                    t3+=(clients[track[i]][0]-q)*quantity_penalty   #ajout d'une pénalité si une quantité n'est pas respectée
                     q=0
 
             except : 
