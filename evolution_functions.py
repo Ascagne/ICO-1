@@ -123,9 +123,10 @@ def next_gen(population):
     couples=[i for i in range(nb_child*2)]
 
     rd.shuffle(couples)
-
+    
 
     for i in range(nb_child//2):
+        
         
 
         child=crossover(population[couples[i]][0],population[couples[nb_pop//2+i]][0])

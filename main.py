@@ -7,7 +7,7 @@ Created on Thu Mar  4 10:18:36 2021
 
 from evolution_functions import next_gen, init_pop
 from constants import nb_generations, nb_pop, n_trucks, truck_capacity, mutation_rate
-from evaluation_functions import circuit_camion
+from evaluation_functions import truck_track_constructor
 from classes import liste
 
 import matplotlib.pyplot as plt
@@ -39,7 +39,7 @@ plt.savefig(str(population[0][1])+'_distance.png', format='png')
 
 liste_clients = liste()
 
-circuit=circuit_camion(population[0])
+circuit=truck_track_constructor(population[0])
 
  #on genere une carte représentant notre solution
 y = [0]

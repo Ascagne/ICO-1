@@ -55,7 +55,11 @@ def track_evaluation(truck_track):
     
                 
 
-def population_evaluation(member):
+
+        
+#evaluation([generate()]+[10]) 
+    
+def truck_track_constructor(member):
     track=member[0]   
 
 
@@ -72,36 +76,14 @@ def population_evaluation(member):
             
     cgt.append(j)
     truck_track.append([0] + track[cgt[-2]+1:cgt[-1]+1] + [0])  
-    
-    
-    t3,trucks_time=track_evaluation(truck_track)
-        
+
+    return truck_track
+
+def population_evaluation(member): 
+    t3,trucks_time=track_evaluation(truck_track_constructor(member))        
     member[1]=t3
 #    print(trucks_time)
     return member
-        
-#evaluation([generate()]+[10]) 
-    
-def circuit_camion(membre):
-    circuit=membre[0]
-
-
-    cgt=[0]
-    circuit_truck=[]
-    
-    for j in range(1,len(circuit)):
-#        c1=max(0,circuit[j])
-#        c2=max(0,circuit[j-1])
-
-        if circuit[j] <= 0:           
-            cgt.append(j)
-            circuit_truck.append([0] + circuit[cgt[-2]+1:cgt[-1]] + [0])
-            
-    cgt.append(j)
-    circuit_truck.append([0] + circuit[cgt[-2]+1:cgt[-1]+1] + [0])  
-
-    return circuit_truck
-
 
 def fusion(gauche,droite):
     resultat = []
