@@ -5,10 +5,9 @@ Created on Thu Mar  4 10:22:06 2021
 @author: Julien
 """
 
-from constants import time_penalty, quantity_penalty, time_matrix, clients, truck_capacity
-
+from constants import time_penalty, quantity_penalty, time_matrix, clients, truck_capacity, truck_cost
 ###############################################################################
-##########################   fonctions d'évaluation  ##########################
+##########################   Fonctions d'évaluation  ##########################
 ###############################################################################
 
 
@@ -18,47 +17,30 @@ def track_evaluation(truck_track):
     for track in truck_track:
         t=0
         q=truck_capacity
+        if len(track) >2 :
+            t3+= truck_cost #Si le camion est utilisé, ajout du coût d'utilisation dans le score du circuit
         for i in range(1,len(track)):
             
             # Evaluation fenêtre
-            try :
-                t2= time_matrix[track[i-1]][track[i]]
-                if t+t2 <= clients[track[i]][2]: #Si arrivé du livreur avant la fin de la fenêtre
-                    t+=t2
-                    t+=+max(0,clients[track[i]][1]-t)  #ajout d'un temps d'attente si le livreur arrive avant le début de la fenêtre
-                else :
-                    t3+= (t+t2 - clients[track[i]][2])*time_penalty #ajout d'une pénalité si une fenêtre n'est pas respectée
-                    t+=t2
-                    
-                    
-                # Evaluation quantité
-                
-                if q >= clients[track[i]][0]:
-                    q-=clients[track[i]][0]
-                else : 
-                    t3+=(clients[track[i]][0]-q)*quantity_penalty   #ajout d'une pénalité si une quantité n'est pas respectée
-                    q=0
-
-            except : 
-                print("!!!!!!!!  PB  !!!!!!!!")
-                print(truck_track)
-                print(len(track))
-                print(len(time_matrix[0]))
-                t=3000
-                
+            t2= time_matrix[track[i-1]][track[i]]
+            if t+t2 <= clients[track[i]][2]: #Si arrivé du livreur avant la fin de la fenêtre
+                t+=t2
+                t+=+max(0,clients[track[i]][1]-t)  #ajout d'un temps d'attente si le livreur arrive avant le début de la fenêtre
+            else :
+                t3+= (t+t2 - clients[track[i]][2])*time_penalty #ajout d'une pénalité si une fenêtre n'est pas respectée
+                t+=t2
+                               
+            # Evaluation quantité            
+            if q >= clients[track[i]][0]:
+                q-=clients[track[i]][0]
+            else : 
+                t3+=(clients[track[i]][0]-q)*quantity_penalty   #ajout d'une pénalité si une quantité n'est pas respectée
+                q=0                
         trucks_time.append(t)
         t3+=t
-#    print(track)
-#    print(len(track))
-#    print(len(time_matrix[0]))
     return t3,trucks_time
     
                 
-
-
-        
-#evaluation([generate()]+[10]) 
-    
 def truck_track_constructor(member):
     track=member[0]   
 
@@ -67,9 +49,6 @@ def truck_track_constructor(member):
     truck_track=[]
     
     for j in range(1,len(track)):
-#        c1=max(0,track[j])
-#        c2=max(0,track[j-1])
-
         if track[j] <= 0:           
             cgt.append(j)
             truck_track.append([0] + track[cgt[-2]+1:cgt[-1]] + [0])
@@ -82,31 +61,31 @@ def truck_track_constructor(member):
 def population_evaluation(member): 
     t3,trucks_time=track_evaluation(truck_track_constructor(member))        
     member[1]=t3
-#    print(trucks_time)
     return member
 
-def fusion(gauche,droite):
-    resultat = []
-    index_gauche, index_droite = 0, 0
-    while index_gauche < len(gauche) and index_droite < len(droite):        
-        if gauche[index_gauche][1] <= droite[index_droite][1]:
-            resultat.append(gauche[index_gauche])
-            index_gauche += 1
+#Nous avons reprogrammé ci-dessous un tri fusion
+def merge(left,right): 
+    result = []
+    index_left, index_right = 0, 0
+    while index_left < len(left) and index_right < len(right):        
+        if left[index_left][1] <= right[index_right][1]:
+            result.append(left[index_left])
+            index_left += 1
         else:
-            resultat.append(droite[index_droite])
-            index_droite += 1
-    if gauche:
-        resultat.extend(gauche[index_gauche:])
-    if droite:
-        resultat.extend(droite[index_droite:])
-    return resultat
+            result.append(right[index_right])
+            index_right += 1
+    if left:
+        result.extend(left[index_left:])
+    if right:
+        result.extend(right[index_right:])
+    return result
  
-def tri_fusion(m):
+def merge_sort(m):
     if len(m) <= 1:
         return m
-    milieu = len(m) // 2
-    gauche = m[:milieu]
-    droite = m[milieu:]
-    gauche = tri_fusion(gauche)
-    droite = tri_fusion(droite)
-    return list(fusion(gauche, droite))
+    middle = len(m) // 2
+    left = m[:middle]
+    right = m[middle:]
+    left = merge_sort(left)
+    right = merge_sort(right)
+    return list(merge(left, right))

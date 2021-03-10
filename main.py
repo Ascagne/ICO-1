@@ -6,12 +6,14 @@ Created on Thu Mar  4 10:18:36 2021
 """
 
 from evolution_functions import next_gen, init_pop
-from constants import nb_generations, nb_pop, n_trucks, truck_capacity, mutation_rate
+from constants import nb_generations, nb_pop, n_trucks, truck_capacity, mutation_rate, list_clients
 from evaluation_functions import truck_track_constructor
-from classes import liste
 
 import matplotlib.pyplot as plt
 
+
+import time
+t1 = time.perf_counter()
 ###############################################################################
 #######################   génération de la population  ########################
 ###############################################################################
@@ -34,22 +36,17 @@ plt.title("Score : "+str(population[0][1])+" | "+str(n_trucks)+" camions d'une c
 plt.savefig(str(population[0][1])+'_distance.png', format='png')    
 
 
-
-
-
-liste_clients = liste()
-
-circuit=truck_track_constructor(population[0])
+track=truck_track_constructor(population[0])
 
  #on genere une carte représentant notre solution
 y = [0]
 z = [0]
 infos = ["Entrepot"]
-for i in range(1,len(liste_clients)):
+for i in range(1,len(list_clients)):
 
-    X.append(liste_clients[i][1])
-    Y.append(liste_clients[i][2])
-    txt = "Client n°"+str(liste_clients[i][0])+"\n"+str(liste_clients[i][3])+" - ["+str(liste_clients[i][4])+", "+str(liste_clients[i][5])+"]"
+    X.append(list_clients[i].x)
+    Y.append(list_clients[i].y)
+    txt = "Client n°"+str(list_clients[i].name)+"\n"+str(list_clients[i].quantity)+" - ["+str(list_clients[i].start)+", "+str(list_clients[i].stop)+"]"
     infos.append(txt)
 
 
@@ -63,22 +60,21 @@ plt.grid()
 for i in range(n_trucks):
     X2=[]
     Y2=[]
-    for j in circuit[i]:
-        X2.append(liste_clients[j][1])
-        Y2.append(liste_clients[j][2])
+    for j in track[i]:
+        X2.append(list_clients[j].x)
+        Y2.append(list_clients[j].y)
         
     X.append(X2)
     Y.append(Y2)
     plt.plot(X2,Y2)
     
+    
 
 for i, txt in enumerate(n):
-    print(txt)
-    print(i)
-    plt.annotate(txt, (liste_clients[i][1], liste_clients[i][2]))
-plt.title("Score : "+str(population[0][1])+" | "+str(n_trucks)+" camions d'une capacité de " + str(truck_capacity) )
 
+    plt.annotate(txt, (list_clients[i].x, list_clients[i].y))
+plt.title("Score : "+str(population[0][1])+" | "+str(n_trucks)+" camions d'une capacité de " + str(truck_capacity) + "\nOrdonnancement : " + str(population[0][0]))
 plt.savefig(str(population[0][1])+'_chemin.png', format='png') 
 
-
-
+t = time.perf_counter() - t1
+print(t)
