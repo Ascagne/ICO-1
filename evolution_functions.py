@@ -37,8 +37,7 @@ def generate():
 #        pop.append([circuit2,distance])
 #    return pop
         
-    
-
+#Notre premier essai de crossover, un two-point-crossover dont les points sont choisis de manière aléatoire
 def crossover(parent1,parent2):
     """
     Utilisation d'un two points crossover
@@ -99,6 +98,7 @@ def crossover(parent1,parent2):
             
     return [0]+child 
 
+#Notre seconde fonction crossover, mais ici on applique un crossover 'presque' uniforme ('presque' car il faut régler certains cas particuliers où un simple crossover uniforme crée des ordonnancements irréels).
 def uniform_cross(p1,p2):
     
     p1 = p1[1:]
@@ -135,13 +135,15 @@ def uniform_cross(p1,p2):
     
     return([0]+child1, [0] + child2)
 
+#Une fonction qui fait un membre de la population avec une probabilité mutation_rate
 def mutation(child, mutation_rate):
     if(rd.random()-mutation_rate < 0):
         point1 = rd.randint(0, len(child)-1)
         point2 = rd.randint(0, len(child)-1)
         child[point1], child[point2] = child[point2], child[point1]
     return(child)
-        
+
+#La fonction qui nous permet d'initier notre population au départ
 def init_pop(n):
     pop=[]
     for i in range(n):
@@ -151,24 +153,23 @@ def init_pop(n):
     return pop
 
 
-
+#Passage à la nouvelle génération
 def next_gen(population):
   
     new_gen=[]
     
+    #Ici on utilise une population élite dont la taille est définie dans constants.py
     if elitism == True:
         elite=population[:best_pop]
     else:
         elite=[]
         
-
+    #On crée des couples
     nb_child=(nb_pop//2)
-    
     couples=[i for i in range(nb_child*2)]
-
     rd.shuffle(couples)
 
-
+    #On crée des enfants avec notre crossover
     for i in range(nb_child//2):
         
         # child=crossover(population[couples[i]][0],population[couples[nb_pop//2+i]][0])        
@@ -178,7 +179,8 @@ def next_gen(population):
         child2=uniform_cross(population[couples[i]][0],population[couples[nb_pop//2+i]][0])[1]
         new_gen.append(population_evaluation([child1,0]))
         new_gen.append(population_evaluation([child2,0]))
-        
+    
+    #Et on crée notre nouvelle génération
     new_gen=new_gen+elite
     
     new_gen= new_gen + init_pop(nb_pop-len(new_gen))
