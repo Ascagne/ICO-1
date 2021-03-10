@@ -10,7 +10,7 @@ from constants import time_penalty, quantity_penalty, time_matrix, clients, truc
 ##########################   Fonctions d'évaluation  ##########################
 ###############################################################################
 
-
+#Une fonction qui évalue le coût d'un chemin, celle qui nous permet d'évaluer notre population
 def track_evaluation(truck_track):
     t3=0
     trucks_time = []
@@ -40,7 +40,7 @@ def track_evaluation(truck_track):
         t3+=t
     return t3,trucks_time
     
-                
+#Cette fonction un peu différente de la précédente va construire le chemin pour la tournée de nos camions depuis un ordonnancement                
 def truck_track_constructor(member):
     track=member[0]   
 
@@ -58,6 +58,7 @@ def truck_track_constructor(member):
 
     return truck_track
 
+#L'application de notre fonction d'évaluation sur un membre de la population (caractérisé par son chemin et son coût)
 def population_evaluation(member): 
     t3,trucks_time=track_evaluation(truck_track_constructor(member))        
     member[1]=t3
